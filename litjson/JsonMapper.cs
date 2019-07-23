@@ -28,15 +28,8 @@ namespace LitJson {
     private Type element_type;
 
     public Type ElementType {
-      get {
-        if (this.element_type == null) {
-          return typeof(JsonData);
-        }
-
-        return this.element_type;
-      }
-
-      set { this.element_type = value; }
+      get => this.element_type ?? typeof(JsonData);
+      set => this.element_type = value;
     }
 
     public Boolean IsArray { get; set; }
@@ -48,22 +41,14 @@ namespace LitJson {
     private Type element_type;
 
     public Type ElementType {
-      get {
-        if (this.element_type == null) {
-          return typeof(JsonData);
-        }
-
-        return this.element_type;
-      }
-
-      set { this.element_type = value; }
+      get => this.element_type ?? typeof(JsonData);
+      set => this.element_type = value;
     }
 
     public Boolean IsDictionary { get; set; }
 
     public IDictionary<String, PropertyMetadata> Properties { get; set; }
   }
-
 
   internal delegate void ExporterFunc(Object obj, JsonWriter writer);
   public delegate void ExporterFunc<T>(T obj, JsonWriter writer);
@@ -291,15 +276,15 @@ namespace LitJson {
       Type value_type = underlying_type ?? inst_type;
 
       if (reader.Token == JsonToken.Null) {
-#if NETSTANDARD1_5
-        if (inst_type.IsClass() || underlying_type != null) {
-          return null;
-        }
-#else
-        if (inst_type.IsClass || underlying_type != null) {
-          return null;
-        }
-#endif
+        #if NETSTANDARD1_5
+          if (inst_type.IsClass() || underlying_type != null) {
+            return null;
+          }
+        #else
+          if (inst_type.IsClass || underlying_type != null) {
+            return null;
+          }
+        #endif
 
         throw new JsonException(String.Format("Can't assign null to an instance of type {0}", inst_type));
       }
@@ -339,14 +324,15 @@ namespace LitJson {
         }
 
         // Maybe it's an enum
-#if NETSTANDARD1_5
-                if (value_type.IsEnum())
-                    return Enum.ToObject (value_type, reader.Value);
-#else
-        if (value_type.IsEnum) {
-          return Enum.ToObject(value_type, reader.Value);
-        }
-#endif
+        #if NETSTANDARD1_5
+          if (value_type.IsEnum()) {
+            return Enum.ToObject (value_type, reader.Value);
+          }
+        #else
+          if (value_type.IsEnum) {
+            return Enum.ToObject(value_type, reader.Value);
+          }
+        #endif
         // Try using an implicit conversion operator
         MethodInfo conv_op = GetConvOp(value_type, json_type);
 
@@ -514,9 +500,7 @@ namespace LitJson {
       return instance;
     }
 
-    private static void ReadSkip(JsonReader reader) {
-      ToWrapper(delegate { return new JsonMockWrapper(); }, reader);
-    }
+    private static void ReadSkip(JsonReader reader) => ToWrapper(delegate { return new JsonMockWrapper(); }, reader);
 
     private static void RegisterBaseExporters() {
       base_exporters_table[typeof(Byte)] = delegate (Object obj, JsonWriter writer) {
@@ -769,7 +753,6 @@ namespace LitJson {
     }
     #endregion
 
-
     public static String ToJson(Object obj) {
       lock (static_writer_lock) {
         static_writer.Reset();
@@ -780,78 +763,32 @@ namespace LitJson {
       }
     }
 
-    public static void ToJson(Object obj, JsonWriter writer) {
-      WriteValue(obj, writer, false, 0);
-    }
+    public static void ToJson(Object obj, JsonWriter writer) => WriteValue(obj, writer, false, 0);
 
-    public static JsonData ToObject(JsonReader reader) {
-      return (JsonData)ToWrapper(delegate { return new JsonData(); }, reader);
-    }
+    public static JsonData ToObject(JsonReader reader) => (JsonData)ToWrapper(delegate { return new JsonData(); }, reader);
 
-    public static JsonData ToObject(TextReader reader) {
-      JsonReader json_reader = new JsonReader(reader);
+    public static JsonData ToObject(TextReader reader) => (JsonData)ToWrapper(delegate { return new JsonData(); }, new JsonReader(reader));
 
-      return (JsonData)ToWrapper(delegate { return new JsonData(); }, json_reader);
-    }
+    public static JsonData ToObject(String json) => (JsonData)ToWrapper(delegate { return new JsonData(); }, json);
 
-    public static JsonData ToObject(String json) {
-      return (JsonData)ToWrapper(delegate { return new JsonData(); }, json);
-    }
+    public static T ToObject<T>(JsonReader reader) => (T)ReadValue(typeof(T), reader);
 
-    public static T ToObject<T>(JsonReader reader) {
-      return (T)ReadValue(typeof(T), reader);
-    }
+    public static T ToObject<T>(TextReader reader) => (T)ReadValue(typeof(T), new JsonReader(reader));
 
-    public static T ToObject<T>(TextReader reader) {
-      JsonReader json_reader = new JsonReader(reader);
+    public static T ToObject<T>(String json) => (T)ReadValue(typeof(T), new JsonReader(json));
 
-      return (T)ReadValue(typeof(T), json_reader);
-    }
+    public static Object ToObject(String json, Type ConvertType) => ReadValue(ConvertType, new JsonReader(json));
 
-    public static T ToObject<T>(String json) {
-      JsonReader reader = new JsonReader(json);
+    public static IJsonWrapper ToWrapper(WrapperFactory factory, JsonReader reader) => ReadValue(factory, reader);
 
-      return (T)ReadValue(typeof(T), reader);
-    }
+    public static IJsonWrapper ToWrapper(WrapperFactory factory, String json) => ReadValue(factory, new JsonReader(json));
 
-    public static Object ToObject(String json, Type ConvertType) {
-      JsonReader reader = new JsonReader(json);
+    public static void RegisterExporter<T>(ExporterFunc<T> exporter) => custom_exporters_table[typeof(T)] = (Object obj, JsonWriter writer) => { exporter((T)obj, writer); };
 
-      return ReadValue(ConvertType, reader);
-    }
+    public static void RegisterImporter<TJson, TValue>(ImporterFunc<TJson, TValue> importer) => RegisterImporter(custom_importers_table, typeof(TJson), typeof(TValue), (Object input) => { return importer((TJson)input); });
 
-    public static IJsonWrapper ToWrapper(WrapperFactory factory, JsonReader reader) {
-      return ReadValue(factory, reader);
-    }
+    public static void UnregisterExporters() => custom_exporters_table.Clear();
 
-    public static IJsonWrapper ToWrapper(WrapperFactory factory, String json) {
-      JsonReader reader = new JsonReader(json);
-
-      return ReadValue(factory, reader);
-    }
-
-    public static void RegisterExporter<T>(ExporterFunc<T> exporter) {
-      ExporterFunc exporter_wrapper = delegate (Object obj, JsonWriter writer) {
-        exporter((T)obj, writer);
-      };
-
-      custom_exporters_table[typeof(T)] = exporter_wrapper;
-    }
-
-    public static void RegisterImporter<TJson, TValue>(ImporterFunc<TJson, TValue> importer) {
-      ImporterFunc importer_wrapper = delegate (Object input) {
-        return importer((TJson)input);
-      };
-
-      RegisterImporter(custom_importers_table, typeof(TJson), typeof(TValue), importer_wrapper);
-    }
-
-    public static void UnregisterExporters() {
-      custom_exporters_table.Clear();
-    }
-
-    public static void UnregisterImporters() {
-      custom_importers_table.Clear();
-    }
+    public static void UnregisterImporters() => custom_importers_table.Clear();
   }
 }
