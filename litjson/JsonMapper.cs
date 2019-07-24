@@ -436,7 +436,7 @@ namespace LitJson {
     }
 
     private static IJsonWrapper ReadValue(WrapperFactory factory, JsonReader reader) {
-      reader.Read();
+      _ = reader.Read();
 
       if (reader.Token == JsonToken.ArrayEnd ||
           reader.Token == JsonToken.Null) {
@@ -478,13 +478,13 @@ namespace LitJson {
           if (item == null && reader.Token == JsonToken.ArrayEnd) {
             break;
           }
-          instance.Add(item);
+          _ = instance.Add(item);
         }
       } else if (reader.Token == JsonToken.ObjectStart) {
         instance.SetJsonType(JsonType.Object);
 
         while (true) {
-          reader.Read();
+          _ = reader.Read();
 
           if (reader.Token == JsonToken.ObjectEnd) {
             break;
@@ -627,7 +627,10 @@ namespace LitJson {
 
       if (obj is IJsonWrapper) {
         if (writer_is_private) {
-          writer.TextWriter.Write(((IJsonWrapper)obj).ToJson());
+          String t = ((IJsonWrapper)obj).ToJson();
+          writer.WriteJson(t);
+          //writer.TextWriter.Write(t);
+          //this.context.ExpectingValue = false;
         } else {
           ((IJsonWrapper)obj).ToJson(writer);
         }
@@ -783,9 +786,9 @@ namespace LitJson {
 
     public static IJsonWrapper ToWrapper(WrapperFactory factory, String json) => ReadValue(factory, new JsonReader(json));
 
-    public static void RegisterExporter<T>(ExporterFunc<T> exporter) => custom_exporters_table[typeof(T)] = (Object obj, JsonWriter writer) => { exporter((T)obj, writer); };
+    public static void RegisterExporter<T>(ExporterFunc<T> exporter) => custom_exporters_table[typeof(T)] = (Object obj, JsonWriter writer) => exporter((T)obj, writer);
 
-    public static void RegisterImporter<TJson, TValue>(ImporterFunc<TJson, TValue> importer) => RegisterImporter(custom_importers_table, typeof(TJson), typeof(TValue), (Object input) => { return importer((TJson)input); });
+    public static void RegisterImporter<TJson, TValue>(ImporterFunc<TJson, TValue> importer) => RegisterImporter(custom_importers_table, typeof(TJson), typeof(TValue), (Object input) => importer((TJson)input));
 
     public static void UnregisterExporters() => custom_exporters_table.Clear();
 

@@ -12,54 +12,26 @@
 using System;
 
 
-namespace LitJson
-{
-    public class JsonException :
+namespace LitJson {
+  public class JsonException :
 #if NETSTANDARD1_5
         Exception
 #else
         ApplicationException
 #endif
     {
-        public JsonException () : base ()
-        {
-        }
+    public JsonException() : base() { }
 
-        internal JsonException (ParserToken token) :
-            base (String.Format (
-                    "Invalid token '{0}' in input string", token))
-        {
-        }
+    internal JsonException(ParserToken token) : base(String.Format("Invalid token '{0}' in input string", token)) { }
 
-        internal JsonException (ParserToken token,
-                                Exception inner_exception) :
-            base (String.Format (
-                    "Invalid token '{0}' in input string", token),
-                inner_exception)
-        {
-        }
+    internal JsonException(ParserToken token, Exception inner_exception) : base(String.Format("Invalid token '{0}' in input string", token), inner_exception) { }
 
-        internal JsonException (int c) :
-            base (String.Format (
-                    "Invalid character '{0}' in input string", (char) c))
-        {
-        }
+    internal JsonException(Int32 c) : base(String.Format("Invalid character '{0}' in input string", (Char)c)) { }
 
-        internal JsonException (int c, Exception inner_exception) :
-            base (String.Format (
-                    "Invalid character '{0}' in input string", (char) c),
-                inner_exception)
-        {
-        }
+    internal JsonException(Int32 c, Exception inner_exception) : base(String.Format("Invalid character '{0}' in input string", (Char)c), inner_exception) { }
 
+    public JsonException(String message) : base(message) { }
 
-        public JsonException (string message) : base (message)
-        {
-        }
-
-        public JsonException (string message, Exception inner_exception) :
-            base (message, inner_exception)
-        {
-        }
-    }
+    public JsonException(String message, Exception inner_exception) : base(message, inner_exception) { }
+  }
 }

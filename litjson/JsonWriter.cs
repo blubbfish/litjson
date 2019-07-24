@@ -51,14 +51,14 @@ namespace LitJson
     public Int32 IndentValue {
       get => this.indent_value;
       set {
-        this.indentation = (this.indentation / this.indent_value) * value;
+        this.indentation = this.indentation / this.indent_value * value;
         this.indent_value = value;
       }
     }
 
     public Boolean PrettyPrint { get; set; }
 
-    public TextWriter TextWriter { get; }
+    private TextWriter TextWriter { get; }
 
     public Boolean Validate { get; set; }
 
@@ -249,7 +249,7 @@ namespace LitJson
       this.ctx_stack.Push(this.context);
 
       if (this.inst_string_builder != null) {
-        this.inst_string_builder.Remove(0, this.inst_string_builder.Length);
+        _ = this.inst_string_builder.Remove(0, this.inst_string_builder.Length);
       }
     }
 
@@ -316,6 +316,19 @@ namespace LitJson
       this.context.ExpectingValue = false;
     }
 
+    public void WriteJson(String str) {
+      this.DoValidation(Condition.Value);
+      this.PutNewline();
+
+      if(str == null) {
+        this.Put("null");
+      } else {
+        this.TextWriter.Write(str);
+      }
+      
+      this.context.ExpectingValue = false;
+    }
+
     public void Write(UInt64 number) {
       this.DoValidation(Condition.Value);
       this.PutNewline();
@@ -329,7 +342,7 @@ namespace LitJson
       this.DoValidation(Condition.InArray);
       this.PutNewline(false);
 
-      this.ctx_stack.Pop();
+      _ = this.ctx_stack.Pop();
       if (this.ctx_stack.Count == 1) {
         this.has_reached_end = true;
       } else {
@@ -359,7 +372,7 @@ namespace LitJson
       this.DoValidation(Condition.InObject);
       this.PutNewline(false);
 
-      this.ctx_stack.Pop();
+      _ = this.ctx_stack.Pop();
       if (this.ctx_stack.Count == 1) {
         this.has_reached_end = true;
       } else {

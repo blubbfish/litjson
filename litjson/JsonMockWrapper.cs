@@ -15,91 +15,118 @@ using System.Collections;
 using System.Collections.Specialized;
 
 
-namespace LitJson
-{
-    public class JsonMockWrapper : IJsonWrapper
-    {
-        public bool IsArray   { get { return false; } }
-        public bool IsBoolean { get { return false; } }
-        public bool IsDouble  { get { return false; } }
-        public bool IsInt     { get { return false; } }
-        public bool IsLong    { get { return false; } }
-        public bool IsObject  { get { return false; } }
-        public bool IsString  { get { return false; } }
+namespace LitJson {
+  public class JsonMockWrapper : IJsonWrapper {
+    public Boolean IsArray => false;
 
-        public bool     GetBoolean ()  { return false; }
-        public double   GetDouble ()   { return 0.0; }
-        public int      GetInt ()      { return 0; }
-        public JsonType GetJsonType () { return JsonType.None; }
-        public long     GetLong ()     { return 0L; }
-        public string   GetString ()   { return ""; }
+    public Boolean IsBoolean => false;
 
-        public void SetBoolean  (bool val)      {}
-        public void SetDouble   (double val)    {}
-        public void SetInt      (int val)       {}
-        public void SetJsonType (JsonType type) {}
-        public void SetLong     (long val)      {}
-        public void SetString   (string val)    {}
+    public Boolean IsDouble => false;
 
-        public string ToJson ()                  { return ""; }
-        public void   ToJson (JsonWriter writer) {}
+    public Boolean IsInt => false;
 
+    public Boolean IsLong => false;
 
-        bool IList.IsFixedSize { get { return true; } }
-        bool IList.IsReadOnly  { get { return true; } }
+    public Boolean IsObject => false;
 
-        object IList.this[int index] {
-            get { return null; }
-            set {}
-        }
+    public Boolean IsString => false;
 
-        int  IList.Add (object value)       { return 0; }
-        void IList.Clear ()                 {}
-        bool IList.Contains (object value)  { return false; }
-        int  IList.IndexOf (object value)   { return -1; }
-        void IList.Insert (int i, object v) {}
-        void IList.Remove (object value)    {}
-        void IList.RemoveAt (int index)     {}
+    public Boolean GetBoolean() => false;
 
+    public Double GetDouble() => 0.0;
 
-        int    ICollection.Count          { get { return 0; } }
-        bool   ICollection.IsSynchronized { get { return false; } }
-        object ICollection.SyncRoot       { get { return null; } }
+    public Int32 GetInt() => 0;
 
-        void ICollection.CopyTo (Array array, int index) {}
+    public JsonType GetJsonType() => JsonType.None;
 
+    public Int64 GetLong() => 0L;
 
-        IEnumerator IEnumerable.GetEnumerator () { return null; }
+    public String GetString() => "";
 
+    public void SetBoolean(Boolean val) { }
 
-        bool IDictionary.IsFixedSize { get { return true; } }
-        bool IDictionary.IsReadOnly  { get { return true; } }
+    public void SetDouble(Double val) { }
 
-        ICollection IDictionary.Keys   { get { return null; } }
-        ICollection IDictionary.Values { get { return null; } }
+    public void SetInt(Int32 val) { }
 
-        object IDictionary.this[object key] {
-            get { return null; }
-            set {}
-        }
+    public void SetJsonType(JsonType type) { }
 
-        void IDictionary.Add (object k, object v) {}
-        void IDictionary.Clear ()                 {}
-        bool IDictionary.Contains (object key)    { return false; }
-        void IDictionary.Remove (object key)      {}
+    public void SetLong(Int64 val) { }
 
-        IDictionaryEnumerator IDictionary.GetEnumerator () { return null; }
+    public void SetString(String val) { }
 
+    public String ToJson() => "";
 
-        object IOrderedDictionary.this[int idx] {
-            get { return null; }
-            set {}
-        }
+    public void ToJson(JsonWriter writer) { }
 
-        IDictionaryEnumerator IOrderedDictionary.GetEnumerator () {
-            return null;
-        }
-        void IOrderedDictionary.Insert   (int i, object k, object v) {}
-        void IOrderedDictionary.RemoveAt (int i) {}
+    Boolean IList.IsFixedSize => true;
+
+    Boolean IList.IsReadOnly => true;
+
+    Object IList.this[Int32 index] {
+      get => null;
+      set {
+      }
     }
+
+    Int32 IList.Add(Object value) => 0;
+
+    void IList.Clear() { }
+
+    Boolean IList.Contains(Object value) => false;
+
+    Int32 IList.IndexOf(Object value) => -1;
+
+    void IList.Insert(Int32 i, Object v) { }
+
+    void IList.Remove(Object value) { }
+
+    void IList.RemoveAt(Int32 index) { }
+
+    Int32 ICollection.Count => 0;
+
+    Boolean ICollection.IsSynchronized => false;
+
+    Object ICollection.SyncRoot => null;
+
+    void ICollection.CopyTo(Array array, Int32 index) { }
+
+    IEnumerator IEnumerable.GetEnumerator() => null;
+
+    Boolean IDictionary.IsFixedSize => true;
+
+    Boolean IDictionary.IsReadOnly => true;
+
+    ICollection IDictionary.Keys => null;
+
+    ICollection IDictionary.Values => null;
+
+    Object IDictionary.this[Object key] {
+      get => null;
+      set {
+      }
+    }
+
+    void IDictionary.Add(Object k, Object v) { }
+
+    void IDictionary.Clear() { }
+
+    Boolean IDictionary.Contains(Object key) => false;
+
+    void IDictionary.Remove(Object key) { }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator() => null;
+
+    Object IOrderedDictionary.this[Int32 idx] {
+      get => null;
+      set {
+      }
+    }
+
+    IDictionaryEnumerator IOrderedDictionary.GetEnumerator() => null;
+
+    void IOrderedDictionary.Insert(Int32 i, Object k, Object v) { }
+
+    void IOrderedDictionary.RemoveAt(Int32 i) { }
+  }
 }

@@ -11,50 +11,47 @@
 #endregion
 
 
+using System;
 using System.Collections;
 using System.Collections.Specialized;
 
 
-namespace LitJson
-{
-    public enum JsonType
-    {
-        None,
+namespace LitJson {
+  public enum JsonType {
+    None,
+    Object,
+    Array,
+    String,
+    Int,
+    Long,
+    Double,
+    Boolean
+  }
 
-        Object,
-        Array,
-        String,
-        Int,
-        Long,
-        Double,
-        Boolean
-    }
+  public interface IJsonWrapper : IList, IOrderedDictionary {
+    Boolean IsArray { get; }
+    Boolean IsBoolean { get; }
+    Boolean IsDouble { get; }
+    Boolean IsInt { get; }
+    Boolean IsLong { get; }
+    Boolean IsObject { get; }
+    Boolean IsString { get; }
 
-    public interface IJsonWrapper : IList, IOrderedDictionary
-    {
-        bool IsArray   { get; }
-        bool IsBoolean { get; }
-        bool IsDouble  { get; }
-        bool IsInt     { get; }
-        bool IsLong    { get; }
-        bool IsObject  { get; }
-        bool IsString  { get; }
+    Boolean GetBoolean();
+    Double GetDouble();
+    Int32 GetInt();
+    JsonType GetJsonType();
+    Int64 GetLong();
+    String GetString();
 
-        bool     GetBoolean ();
-        double   GetDouble ();
-        int      GetInt ();
-        JsonType GetJsonType ();
-        long     GetLong ();
-        string   GetString ();
+    void SetBoolean(Boolean val);
+    void SetDouble(Double val);
+    void SetInt(Int32 val);
+    void SetJsonType(JsonType type);
+    void SetLong(Int64 val);
+    void SetString(String val);
 
-        void SetBoolean  (bool val);
-        void SetDouble   (double val);
-        void SetInt      (int val);
-        void SetJsonType (JsonType type);
-        void SetLong     (long val);
-        void SetString   (string val);
-
-        string ToJson ();
-        void   ToJson (JsonWriter writer);
-    }
+    String ToJson();
+    void ToJson(JsonWriter writer);
+  }
 }
