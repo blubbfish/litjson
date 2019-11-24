@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>LitJson</AssemblyName>
+    <RootNamespace>litjson</RootNamespace>
+    <PackageId>LitJson</PackageId>
+    <Product>LitJSON</Product>
+    <Description>LitJSON library</Description>
+    <Company />
+    <Authors />
+    <Version>0.12.0</Version>
+    <AssemblyVersion>0.12.0</AssemblyVersion>
+    <FileVersion>0.12.0</FileVersion>
+    <PackageLicenseFile>COPYING</PackageLicenseFile>
+    <Copyright>The authors disclaim copyright to this source code</Copyright>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <Content Include="../COPYING" />
+    <Content Include="../README.md" />
+  </ItemGroup>
+  
+  
+  <ItemGroup>
+    <None Include="..\COPYING">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
