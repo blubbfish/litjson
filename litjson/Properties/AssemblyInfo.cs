@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-#else
+﻿#if !NETCOREAPP
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
